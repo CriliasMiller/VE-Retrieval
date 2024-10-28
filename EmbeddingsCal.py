@@ -247,7 +247,7 @@ def getText_Video_sim(text):
 
     logit_scale = model.model.clip.logit_scale.exp().detach().cpu().numpy()
 
-    video_embeddings = np.load('video_embeddings.npy')  # 加载 shape: (num_videos, 512) 的 numpy 数组
+    video_embeddings = np.load('video_embeddings.npy') 
     video_ids = np.load('video_ids.npy')
 
     sim = logit_scale * np.matmul(video_embeddings, text_emb)
@@ -257,7 +257,6 @@ def getText_Video_sim(text):
             print(f"Video Path: {video_ids[idx]}, Similarity: {sim[idx]}")
 
 if __name__ == "__main__":
-    # 视频路径
     video_paths = ['./demoVideo/demo_video.mp4','./demoVide/demo1.mp4','./demoVide/demo2.mp4','./demoVide/woman_dancing.mp4']
     test_path = '/workspace/Crilias/zhangzhenxing/test'
     dataPath = '/workspace/Crilias/zhangzhenxing/dataProcess/data'

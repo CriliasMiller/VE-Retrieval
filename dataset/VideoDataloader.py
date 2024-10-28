@@ -26,13 +26,10 @@ def resize_and_crop(image, size=(224, 224)):
     return image[start_y:start_y + size[0], start_x:start_x + size[1]]
 
 def gpu_transform(image):
-    # 转换到 RGB
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     
-    # Resize and center crop
     cropped_image = resize_and_crop(image)
 
-    # 转换为张量并归一化
     tensor = torch.from_numpy(cropped_image).permute(2, 0, 1).float() / 255.0
     mean = torch.tensor([0.48145466, 0.4578275, 0.40821073]).view(1, 3, 1, 1)
     std = torch.tensor([0.26862954, 0.26130258, 0.27577711]).view(1, 3, 1, 1)
@@ -61,7 +58,7 @@ class VideoDatasetOrigin(Dataset):
 
     def __getitem__(self, idx):
         video_path = self.video_paths[idx]
-        frames = list(self.video_decoder(video_path))  # 获取视频帧列表
+        frames = list(self.video_decoder(video_path)) 
         slice_len = len(frames)
 
         video_tensor = np.zeros((self.max_frames, 3, 224, 224), dtype=np.float32)
@@ -95,7 +92,7 @@ class VideoDataset(Dataset):
         ])
     def extract_keyframes(self, video_path):
         container = av.open(video_path)
-        fps = container.streams.video[0].average_rate  # 获取视频帧率
+        fps = container.streams.video[0].average_rate  
         total_frames = container.streams.video[0].frames
 
         interval = total_frames // self.max_frames
@@ -137,7 +134,6 @@ class VideoDataset(Dataset):
             if not ret:
                 break
             if frame_count % interval == 0 and i < self.max_frames:
-                # 直接使用 NumPy 数组，变换应用在 NumPy 数组上
                 # frame = torch.from_numpy(frame).permute(2, 0, 1).float() / 255.0
                 # frame = self.custom_transform(frame)
                 frames_tensor[i,...] = self.transform(frame)
@@ -153,7 +149,7 @@ class VideoDataset(Dataset):
         return frames_tensor
     def extract_keyframes_Tensor(self, video_path):
         container = av.open(video_path)
-        fps = container.streams.video[0].average_rate  # 获取视频帧率
+        fps = container.streams.video[0].average_rate 
         total_frames = container.streams.video[0].frames
 
         interval = total_frames // self.max_frames
@@ -182,8 +178,6 @@ class VideoDataset(Dataset):
 
             if i >= self.max_frames:
                 break
-        # frames_tensor = torch.stack(frames)  # 将多个 frame 组成的 list 转换为 tensor
-        # print("Frames tensor size:", frames_tensor.size())  # 检查 tensor 的尺寸
         return frames_tensor
     def extract_keyframes_With_Noresize(self, video_path):
         cap = cv2.VideoCapture(video_path)
@@ -199,7 +193,6 @@ class VideoDataset(Dataset):
             if not ret:
                 break
             if frame_count % interval == 0 and i < self.max_frames:
-                # 直接使用 NumPy 数组，变换应用在 NumPy 数组上
                 # frame = torch.from_numpy(frame).permute(2, 0, 1).float() / 255.0
                 # frame = self.custom_transform(frame)
                 frames.append(frame)
@@ -267,14 +260,13 @@ class VideoDatasetEffiency(Dataset):
             if len(frames) >= self.max_frames:
                 break
         print(video_tensor.size())
-        frames_tensor = torch.stack(frames)  # 将多个 frame 组成的 list 转换为 tensor
+        frames_tensor = torch.stack(frames)  
         # print("Frames tensor size:", frames_tensor.size())  # 检查 tensor 的尺寸
         return video_tensor
     
     def __len__(self):
         return len(self.video_paths)
     def tensor_transform(self,frames_tensor):
-        # 直接对张量进行操作，使用 interpolate 进行 resize
         #antialias
         resized_frames = F.interpolate(frames_tensor, size=(224, 224), mode='bilinear', align_corners=False)
         # 归一化（手动实现 normalize）

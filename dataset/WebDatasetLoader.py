@@ -14,7 +14,6 @@ class WebVideoDataset(Dataset):
         self.max_frames = max_frames
         self.transform = transform if transform else self.default_transform()
 
-        # 存储所有视频和对应的键值
         self.video_data = []
         for tar_path in self.video_paths:
             self.load_videos_from_tar(tar_path)
@@ -27,7 +26,6 @@ class WebVideoDataset(Dataset):
         )
         
         for video_data, meta in dataset:
-            # 提取文件名作为键值
             key = os.path.basename(video_data.name).split('.')[0]  # 例如 '010101'
             self.video_data.append((key, video_data))
 
