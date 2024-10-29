@@ -9,5 +9,3 @@ Video Embeddings Retrieval with CLIP4CLIP
 ### Training
 ```bash
 sh run.sh
-
-
