@@ -258,10 +258,10 @@ def getText_Video_sim(text):
 
 if __name__ == "__main__":
     video_paths = ['./demoVideo/demo_video.mp4','./demoVide/demo1.mp4','./demoVide/demo2.mp4','./demoVide/woman_dancing.mp4']
-    test_path = '/workspace/Crilias/zhangzhenxing/test'
-    dataPath = '/workspace/Crilias/zhangzhenxing/dataProcess/data'
-    data = '/workspace/Crilias/zhangzhenxing/Embeddings/data'
-    EmbeddingsTest = '/workspace/Crilias/zhangzhenxing/Embeddings/EmbeddingsTest'
+    test_path = '/test'
+    dataPath = '/dataProcess/data'
+    data = '/Embeddings/data'
+    EmbeddingsTest = '/Embeddings/EmbeddingsTest'
     Video_2k = [os.path.join(EmbeddingsTest, video) for video in os.listdir(EmbeddingsTest) if video.endswith('mp4')]
     # save_video_embeddings(Video_2k, batch_size=16, num_workers=16)
 
